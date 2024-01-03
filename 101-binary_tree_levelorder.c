@@ -32,7 +32,7 @@ void binary_tree_levelorder(const binary_tree_t *tree, void (*func)(int))
 	size_t size = 0;
 	const binary_tree_t *curr;
 
-	if (tree == NULL)
+	if (tree == NULL || func == NULL)
 		return;
 
 	/* get size of tree */
