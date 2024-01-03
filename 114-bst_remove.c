@@ -10,6 +10,8 @@
 */
 bst_t *bst_remove(bst_t *root, int value)
 {
+	bst_t *new = NULL;
+
 	if (root == NULL)
 		return (NULL);
 
@@ -19,10 +21,15 @@ bst_t *bst_remove(bst_t *root, int value)
 		root->right = bst_remove(root->right, value);
 	else
 	{
-		if (!root->left)
-			return (root->right);
-		else if (!root->right)
-			return (root->left);
+		if (root->left == NULL || root->right == NULL)
+		{
+			new = root->left ? root->left : root->right;
+
+			if (new)
+				new->parent = root->parent;
+			free(root);
+			return (new);
+		}
 
 		/* finding min value from right sub-tree */
 		bst_t *curr = root->right;
