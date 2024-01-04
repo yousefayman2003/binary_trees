@@ -21,14 +21,14 @@ void binary_tree_levelorder(binary_tree_t *tree, void (*func)(int))
 		func(tree->n);
 		return;
 	}
-	
+
 	/* append root node */
 	enqueue_node(&head, tree);
 	while (head)
 	{
 		/* print node */
 		func(tree->n);
-		
+
 		/* add children to queue */
 		if (tree->left)
 			enqueue_node(&head, tree->left);
