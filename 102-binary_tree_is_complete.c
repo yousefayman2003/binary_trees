@@ -1,6 +1,7 @@
 #include "binary_trees.h"
 
-size_t binary_tree_size_te(const binary_tree_t *tree);
+size_t tree_size(const binary_tree_t *tree);
+int is_complete_tree(binary_tree_t *tree, size_t index, size_t size);
 
 /**
  * binary_tree_is_complete - checks if a binary tree is complete
@@ -8,55 +9,26 @@ size_t binary_tree_size_te(const binary_tree_t *tree);
  *
  * Return: If tree is NULL, your function must return 0
 */
-int binary_tree_is_complete(const binary_tree_t *tree)
+int binary_tree_is_complete(binary_tree_t *tree)
 {
-	int head = 0, tail = 0;
-	size_t size = 0;
-	const binary_tree_t *curr;
+	size_t tree_s;
 
 	if (tree == NULL)
 		return (0);
-
 	/* get size of tree */
-	size = binary_tree_size_te(tree);
-	/* make a queue */
-	const binary_tree_t **queue = malloc(sizeof(const binary_tree_t *) * size);
-	/* enqueue the root */
-	queue[tail++] = tree;
+	tree_s = tree_size(tree);
 
-	while (head < tail)
-	{
-		/* deque node */
-		curr = queue[head++];
-
-		/* if not there is a node*/
-		if (curr != NULL)
-		{
-			queue[tail++] = curr->left;
-			queue[tail++] = curr->right;
-		}
-		else
-		{
-			while (head < tail)
-			{
-				if (queue[head++])
-					return (0);
-			}
-		}
-	}
-
-	/* free queue */
-	free(queue);
-	return (1);
+	/* solve recurisvly */
+	return (is_complete_tree(tree, 0, tree_s));
 }
 
 /**
- * binary_tree_size_te - measures the size of a binary tree
+ * tree_size - measures the size of a binary tree
  * @tree: pointer to the root node of the tree to measure the size
  *
  * Return: size of tree
 */
-size_t binary_tree_size_te(const binary_tree_t *tree)
+size_t tree_size(const binary_tree_t *tree)
 {
 	size_t n_nodes = 1;
 
@@ -64,8 +36,27 @@ size_t binary_tree_size_te(const binary_tree_t *tree)
 		return (0);
 
 	/* recursively add a node */
-	n_nodes += binary_tree_size_te(tree->left);
-	n_nodes += binary_tree_size_te(tree->right);
+	n_nodes += tree_size(tree->left);
+	n_nodes += tree_size(tree->right);
 
 	return (n_nodes);
+}
+
+/**
+ * is_complete_tree - sees if a binary tree is complete recurisvuly
+ * @tree: pointer to tree node
+ * @index: index to check
+ * @size: size of binary tree
+ * Return: 1 if complete tree, otherwise 0
+ */
+int is_complete_tree(binary_tree_t *tree, size_t index, size_t size)
+{
+	if (tree == NULL)
+		return (1);
+
+	if (index >= size)
+		return (0);
+
+	return (is_complete_tree(tree->left, 2 * index + 1, size) &&
+		is_complete_tree(tree->right, 2 * index + 2, size));
 }
